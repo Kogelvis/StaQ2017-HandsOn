@@ -1,0 +1,16 @@
+[Unit]
+Description=Staq Java8-9 container
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+Environment=IMAGE=test/quintor/nl
+Environment=NAME=staq-java89
+ExecStartPre=-/usr/bin/docker pull ${IMAGE}
+ExecStartPre=-/usr/bin/docker rm -f ${NAME}
+ExecStart=/usr/bin/docker run -m 256m -e VIRTUAL_HOST=${NAME}.staq.info --restart=always -P --name ${NAME} ${IMAGE}
+ExecStop=/usr/bin/docker stop ${NAME}
+
+[Install]
+WantedBy=default.target
